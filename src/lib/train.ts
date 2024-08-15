@@ -1,6 +1,6 @@
 import trainDefault from '../assets/Train Default.svg'
 import trainJT from '../assets/Train 東海道線.svg'
-import trainOH from '../assets/Train 小田原線.svg'
+import trainOH from '../assets/Train 小田急線.svg'
 
 export function getTrainPreview(name: string): string {
   switch (name) {
