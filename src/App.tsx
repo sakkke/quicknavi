@@ -2,7 +2,8 @@ import { ArrowDownwardRounded, FlagRounded, LocationOnRounded, ScheduleRounded, 
 import { AppBar, Autocomplete, Box, Chip, Container, Divider, InputAdornment, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material'
 import trainUnknown from './assets/Train Unknown.svg'
 import { createClient } from './lib/supabase'
-import { useEffect, useState } from 'react'
+import { SyntheticEvent, useEffect, useState } from 'react'
+import { getTrainPreview } from './lib/train'
 
 export default function App() {
   const [trainNameOptions, setTrainNameOptions] = useState<any[]>([])
@@ -19,6 +20,13 @@ export default function App() {
 
     fetchTrains()
   }, [])
+
+  const [trainName, setTrainName] = useState('')
+  const [trainPreview, setTrainPreview] = useState(trainUnknown)
+  const handleTrainName = (_event: SyntheticEvent, value: string) => {
+    setTrainName(value)
+    setTrainPreview(getTrainPreview(value))
+  }
 
   return (
     <Box>
@@ -54,6 +62,7 @@ export default function App() {
                     <Stack>
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
+                        value={trainName}
                         options={trainNameOptions}
                         renderInput={(params) => (
                           <TextField
@@ -70,6 +79,7 @@ export default function App() {
                             }}
                           />
                         )}
+                        onChange={handleTrainName}
                       />
                     </Stack>
                   </Stack>
@@ -79,7 +89,7 @@ export default function App() {
                   <Box sx={{ p: 3, border: '1px dashed gray' }}>
                     <Stack spacing={3} alignItems={'center'}>
                       <Stack>
-                        <img style={{ maxWidth: '100%' }} src={trainUnknown} alt='Train preview' width='200' />
+                        <img style={{ maxWidth: '100%' }} src={trainPreview} alt='Train preview' width='200' />
                       </Stack>
 
                       <Stack>
