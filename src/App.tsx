@@ -1,8 +1,25 @@
 import { ArrowDownwardRounded, FlagRounded, LocationOnRounded, ScheduleRounded, TrainRounded } from '@mui/icons-material'
 import { AppBar, Autocomplete, Box, Chip, Container, Divider, InputAdornment, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material'
 import trainUnknown from './assets/Train Unknown.svg'
+import { createClient } from './lib/supabase'
+import { useEffect, useState } from 'react'
 
 export default function App() {
+  const [trainNameOptions, setTrainNameOptions] = useState<any[]>([])
+  useEffect(() => {
+    const supabase = createClient()
+
+    const fetchTrains = async () => {
+      const { data: trains } = await supabase.from('trains').select()
+      if (trains) {
+        const names = trains.map((train) => train.name)
+        setTrainNameOptions(names)
+      }
+    }
+
+    fetchTrains()
+  }, [])
+
   return (
     <Box>
       <AppBar>
@@ -37,7 +54,7 @@ export default function App() {
                     <Stack>
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
-                        options={[]}
+                        options={trainNameOptions}
                         renderInput={(params) => (
                           <TextField
                             label='鉄道名'
