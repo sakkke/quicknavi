@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">quicknavi</string>
+    <string name="title_activity_main">quicknavi</string>
+    <string name="package_name">dev.sakkke.quicknavi</string>
+    <string name="custom_url_scheme">dev.sakkke.quicknavi</string>
+</resources>
