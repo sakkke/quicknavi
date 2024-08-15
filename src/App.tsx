@@ -1,7 +1,14 @@
-import { Box } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 
 export default function App() {
   return (
-    <Box />
+    <Box>
+      <AppBar>
+        <Toolbar>
+          <Typography>QuickNavi</Typography>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+    </Box>
   )
 }
