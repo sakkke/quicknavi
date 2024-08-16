@@ -170,6 +170,10 @@ export default function App() {
     setDepartureTime(value)
   }
 
+  const handleUpdates = (payload: any) => {
+    setCongestion(payload.new.data)
+  }
+
   const [congestion, setCongestion] = useState<Data | null>(null)
   useEffect(() => {
     const supabase = createClient()
@@ -199,6 +203,15 @@ export default function App() {
     }
 
     fetchCongestion()
+
+    const channel = supabase
+      .channel('pointers')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'pointers' }, handleUpdates)
+      .subscribe()
+
+    return () => {
+      channel.unsubscribe()
+    }
   }, [departureId])
 
   return (
