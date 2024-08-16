@@ -23,10 +23,46 @@ export default function App() {
 
   const [trainName, setTrainName] = useState('')
   const [trainPreview, setTrainPreview] = useState(trainUnknown)
+  const [trainId, setTrainId] = useState(0)
   const handleTrainName = (_event: SyntheticEvent, value: string) => {
     setTrainName(value)
     setTrainPreview(getTrainPreview(value))
+
+    const supabase = createClient()
+
+    const fetchTrainId = async () => {
+      const { data } = await supabase
+        .from('trains')
+        .select()
+        .eq('name', value)
+        .select('id')
+        .limit(1)
+        .single()
+      if (data) {
+        setTrainId(data.id)
+      }
+    }
+
+    fetchTrainId()
   }
+
+  const [stationNameOptions, setStationNameOptions] = useState<any[]>([])
+  useEffect(() => {
+    const supabase = createClient()
+
+    const fetchStations = async () => {
+      const { data: stations } = await supabase
+        .from('stations')
+        .select()
+        .eq('train_id', trainId)
+      if (stations) {
+        const names = stations.map((station) => station.name)
+        setStationNameOptions(names)
+      }
+    }
+
+    fetchStations()
+  }, [trainId])
 
   return (
     <Box>
@@ -120,7 +156,7 @@ export default function App() {
                     <Stack>
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
-                        options={[]}
+                        options={stationNameOptions}
                         renderInput={(params) => (
                           <TextField
                             {...params}
