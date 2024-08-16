@@ -121,6 +121,15 @@ export default function App() {
     fetchDepartureTimes()
   }, [directionId])
 
+  const [departureTime, setDepartureTime] = useState('')
+  const handleDepartureTime = (_event: SyntheticEvent, value: string) => {
+    setDepartureTime(value)
+  }
+
+  const handleDepartureTimeChip = (value: string) => {
+    setDepartureTime(value)
+  }
+
   return (
     <Box>
       <AppBar>
@@ -283,6 +292,7 @@ export default function App() {
                 <Stack>
                   <Autocomplete
                     sx={{ maxWidth: 300 }}
+                    value={departureTime}
                     options={departureTimeOptions}
                     isOptionEqualToValue={(option, value) => option === value}
                     renderInput={(params) => (
@@ -300,13 +310,24 @@ export default function App() {
                         }}
                       />
                     )}
+                    onChange={handleDepartureTime}
                   />
                 </Stack>
 
                 <Stack>
-                  <Box sx={{ p: 3, border: '1px dashed gray' }}>
-                    <Typography>ステップ2まで入力すると、発車時刻の一覧を表示できます。</Typography>
-                  </Box>
+                  {departureTimeOptions.length === 0 ? (
+                    <Box sx={{ p: 3, border: '1px dashed gray' }}>
+                      <Typography>ステップ2まで入力すると、発車時刻の一覧を表示できます。</Typography>
+                    </Box>
+                  ) : (
+                    <Stack spacing={1} direction={'row'}>
+                      {departureTimeOptions.map((departureTime, i) => (
+                        <Stack key={i}>
+                          <Chip label={departureTime} onClick={() => { handleDepartureTimeChip(departureTime) }} />
+                        </Stack>
+                      ))}
+                    </Stack>
+                  )}
                 </Stack>
               </Stack>
             </Paper>
