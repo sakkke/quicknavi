@@ -118,6 +118,7 @@ export default function App() {
                         sx={{ maxWidth: 300 }}
                         value={trainName}
                         options={trainNameOptions}
+                        isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) => (
                           <TextField
                             label='鉄道名'
@@ -175,6 +176,7 @@ export default function App() {
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
                         options={stationNameOptions}
+                        isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) => (
                           <TextField
                             {...params}
@@ -201,6 +203,7 @@ export default function App() {
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
                         options={directionNameOptions}
+                        isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) => (
                           <TextField
                             {...params}
@@ -241,6 +244,7 @@ export default function App() {
                   <Autocomplete
                     sx={{ maxWidth: 300 }}
                     options={[]}
+                    isOptionEqualToValue={(option, value) => option === value}
                     renderInput={(params) => (
                       <TextField
                         {...params}
