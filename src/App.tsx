@@ -64,6 +64,24 @@ export default function App() {
     fetchStations()
   }, [trainId])
 
+  const [directionNameOptions, setDirectionNameOptions] = useState<any[]>([])
+  useEffect(() => {
+    const supabase = createClient()
+
+    const fetchDirections = async () => {
+      const { data: directions } = await supabase
+        .from('directions')
+        .select()
+        .eq('train_id', trainId)
+      if (directions) {
+        const names = directions.map((direction) => direction.name)
+        setDirectionNameOptions(names)
+      }
+    }
+
+    fetchDirections()
+  }, [trainId])
+
   return (
     <Box>
       <AppBar>
@@ -182,7 +200,7 @@ export default function App() {
                     <Stack>
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
-                        options={[]}
+                        options={directionNameOptions}
                         renderInput={(params) => (
                           <TextField
                             {...params}
