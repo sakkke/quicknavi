@@ -88,8 +88,11 @@ export default function App() {
     fetchDirections()
   }, [trainId])
 
+  const [directionName, setDirectionName] = useState('')
   const [directionId, setDirectionId] = useState(0)
   const handleDirectionName = (_event: SyntheticEvent, value: string) => {
+    setDirectionName(value)
+
     const supabase = createClient()
 
     const fetchDirectionId = async () => {
@@ -257,6 +260,7 @@ export default function App() {
                     <Stack>
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
+                        value={directionName}
                         options={directionNameOptions}
                         isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) => (
