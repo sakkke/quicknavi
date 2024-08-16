@@ -24,7 +24,7 @@ export default function App() {
 
   const [trainName, setTrainName] = useState<string | null>(null)
   const [trainPreview, setTrainPreview] = useState(trainUnknown)
-  const [trainId, setTrainId] = useState(0)
+  const [trainId, setTrainId] = useState<number | null>(null)
   const handleTrainName = (_event: SyntheticEvent, value: string) => {
     setTrainName(value)
     setTrainPreview(getTrainPreview(value))
@@ -52,6 +52,10 @@ export default function App() {
     const supabase = createClient()
 
     const fetchStations = async () => {
+      if (!trainId) {
+        return
+      }
+
       const { data: stations } = await supabase
         .from('stations')
         .select()
@@ -75,6 +79,10 @@ export default function App() {
     const supabase = createClient()
 
     const fetchDirections = async () => {
+      if (!trainId) {
+        return
+      }
+
       const { data: directions } = await supabase
         .from('directions')
         .select()
@@ -89,7 +97,7 @@ export default function App() {
   }, [trainId])
 
   const [directionName, setDirectionName] = useState<string | null>(null)
-  const [directionId, setDirectionId] = useState(0)
+  const [directionId, setDirectionId] = useState<number | null>(null)
   const handleDirectionName = (_event: SyntheticEvent, value: string) => {
     setDirectionName(value)
 
@@ -116,6 +124,10 @@ export default function App() {
     const supabase = createClient()
 
     const fetchDepartureTimes = async () => {
+      if (!directionId) {
+        return
+      }
+
       const { data: departures } = await supabase
         .from('departures')
         .select()
