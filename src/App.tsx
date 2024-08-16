@@ -22,7 +22,7 @@ export default function App() {
     fetchTrains()
   }, [])
 
-  const [trainName, setTrainName] = useState('')
+  const [trainName, setTrainName] = useState<string | null>(null)
   const [trainPreview, setTrainPreview] = useState(trainUnknown)
   const [trainId, setTrainId] = useState(0)
   const handleTrainName = (_event: SyntheticEvent, value: string) => {
@@ -65,7 +65,7 @@ export default function App() {
     fetchStations()
   }, [trainId])
 
-  const [stationName, setStationName] = useState('')
+  const [stationName, setStationName] = useState<string | null>(null)
   const handleStationName = (_event: SyntheticEvent, value: string) => {
     setStationName(value)
   }
@@ -88,7 +88,7 @@ export default function App() {
     fetchDirections()
   }, [trainId])
 
-  const [directionName, setDirectionName] = useState('')
+  const [directionName, setDirectionName] = useState<string | null>(null)
   const [directionId, setDirectionId] = useState(0)
   const handleDirectionName = (_event: SyntheticEvent, value: string) => {
     setDirectionName(value)
@@ -129,7 +129,7 @@ export default function App() {
     fetchDepartureTimes()
   }, [directionId])
 
-  const [departureTime, setDepartureTime] = useState('')
+  const [departureTime, setDepartureTime] = useState<string | null>(null)
   const handleDepartureTime = (_event: SyntheticEvent, value: string) => {
     setDepartureTime(value)
   }
@@ -172,7 +172,7 @@ export default function App() {
                     <Stack>
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
-                        value={trainName}
+                        value={trainName || null}
                         options={trainNameOptions}
                         isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) => (
@@ -231,7 +231,7 @@ export default function App() {
                     <Stack>
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
-                        value={stationName}
+                        value={stationName || null}
                         options={stationNameOptions}
                         isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) => (
@@ -261,7 +261,7 @@ export default function App() {
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
                         value={directionName}
-                        options={directionNameOptions}
+                        options={directionNameOptions || null}
                         isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) => (
                           <TextField
@@ -303,7 +303,7 @@ export default function App() {
                 <Stack>
                   <Autocomplete
                     sx={{ maxWidth: 300 }}
-                    value={departureTime}
+                    value={departureTime || null}
                     options={departureTimeOptions}
                     isOptionEqualToValue={(option, value) => option === value}
                     renderInput={(params) => (
