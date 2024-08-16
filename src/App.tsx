@@ -65,6 +65,11 @@ export default function App() {
     fetchStations()
   }, [trainId])
 
+  const [stationName, setStationName] = useState('')
+  const handleStationName = (_event: SyntheticEvent, value: string) => {
+    setStationName(value)
+  }
+
   const [directionNameOptions, setDirectionNameOptions] = useState<any[]>([])
   useEffect(() => {
     const supabase = createClient()
@@ -223,6 +228,7 @@ export default function App() {
                     <Stack>
                       <Autocomplete
                         sx={{ maxWidth: 300 }}
+                        value={stationName}
                         options={stationNameOptions}
                         isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) => (
@@ -240,6 +246,7 @@ export default function App() {
                             }}
                           />
                         )}
+                        onChange={handleStationName}
                       />
                     </Stack>
 
