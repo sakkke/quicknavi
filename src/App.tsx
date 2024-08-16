@@ -4,6 +4,7 @@ import trainUnknown from './assets/Train Unknown.svg'
 import { createClient } from './lib/supabase'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { getTrainPreview } from './lib/train'
+import { formatTime } from './lib/time'
 
 export default function App() {
   const [trainNameOptions, setTrainNameOptions] = useState<any[]>([])
@@ -81,6 +82,44 @@ export default function App() {
 
     fetchDirections()
   }, [trainId])
+
+  const [directionId, setDirectionId] = useState(0)
+  const handleDirectionName = (_event: SyntheticEvent, value: string) => {
+    const supabase = createClient()
+
+    const fetchDirectionId = async () => {
+      const { data } = await supabase
+        .from('directions')
+        .select()
+        .eq('name', value)
+        .select('id')
+        .limit(1)
+        .single()
+      if (data) {
+        setDirectionId(data.id)
+      }
+    }
+
+    fetchDirectionId()
+  }
+
+  const [departureTimeOptions, setDepartureTimeOptions] = useState<any[]>([])
+  useEffect(() => {
+    const supabase = createClient()
+
+    const fetchDepartureTimes = async () => {
+      const { data: departures } = await supabase
+        .from('departures')
+        .select()
+        .eq('direction_id', directionId)
+      if (departures) {
+        const times = departures.map((departure) => formatTime(departure.time))
+        setDepartureTimeOptions(times)
+      }
+    }
+
+    fetchDepartureTimes()
+  }, [directionId])
 
   return (
     <Box>
@@ -219,6 +258,7 @@ export default function App() {
                             }}
                           />
                         )}
+                        onChange={handleDirectionName}
                       />
                     </Stack>
                   </Stack>
@@ -243,7 +283,7 @@ export default function App() {
                 <Stack>
                   <Autocomplete
                     sx={{ maxWidth: 300 }}
-                    options={[]}
+                    options={departureTimeOptions}
                     isOptionEqualToValue={(option, value) => option === value}
                     renderInput={(params) => (
                       <TextField
