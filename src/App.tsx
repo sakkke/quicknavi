@@ -4,7 +4,9 @@ import trainUnknown from './assets/Train Unknown.svg'
 import { createClient } from './lib/supabase'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { getTrainPreview } from './lib/train'
-import { formatTime } from './lib/time'
+import { formatTime, parseTime } from './lib/time'
+import { ListCongestion } from './components/ListCongestion'
+import { Data } from './lib/congestion'
 
 export default function App() {
   const [trainNameOptions, setTrainNameOptions] = useState<any[]>([])
@@ -142,13 +144,62 @@ export default function App() {
   }, [directionId])
 
   const [departureTime, setDepartureTime] = useState<string | null>(null)
+  const [departureId, setDepartureId] = useState<number | null>(null)
   const handleDepartureTime = (_event: SyntheticEvent, value: string) => {
     setDepartureTime(value)
+
+    const supabase = createClient()
+
+    const fetchDepartureId = async () => {
+      const { data } = await supabase
+        .from('departures')
+        .select()
+        .eq('time', parseTime(value))
+        .select('id')
+        .limit(1)
+        .single()
+      if (data) {
+        setDepartureId(data.id)
+      }
+    }
+
+    fetchDepartureId()
   }
 
   const handleDepartureTimeChip = (value: string) => {
     setDepartureTime(value)
   }
+
+  const [congestion, setCongestion] = useState<Data | null>(null)
+  useEffect(() => {
+    const supabase = createClient()
+
+    const fetchCongestion = async () => {
+      if (!departureId) {
+        return
+      }
+
+      const { data } = await supabase
+        .from('congestions')
+        .select()
+        .eq('departure_id', departureId)
+        .limit(1)
+        .single()
+      if (data) {
+        const { data: pointer } = await supabase
+          .from('pointers')
+          .select()
+          .eq('id', data.pointer_id)
+          .limit(1)
+          .single()
+        if (pointer) {
+          setCongestion(pointer.data)
+        }
+      }
+    }
+
+    fetchCongestion()
+  }, [departureId])
 
   return (
     <Box>
@@ -370,9 +421,7 @@ export default function App() {
                 </Stack>
 
                 <Stack>
-                  <Box sx={{ p: 3, border: '1px dashed gray' }}>
-                    <Typography>ステップ3まで入力すると、混雑度を表示できます。</Typography>
-                  </Box>
+                  <ListCongestion data={congestion} />
                 </Stack>
               </Stack>
             </Paper>
